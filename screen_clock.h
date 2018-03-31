@@ -12,6 +12,7 @@ public:
     void create() override;
     void destroy() override;
     void process(LiquidCrystal &lcd) override;
+    void button_event(uint8_t type, uint8_t state) override;
 
 private:
     struct pt updater_pt;
@@ -21,6 +22,7 @@ private:
 
     unsigned long last_update;
     unsigned long wait_start;
+    unsigned long repeat_counter;
 
     int hour_clip;
     int tens_clip;

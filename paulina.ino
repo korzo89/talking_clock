@@ -1,6 +1,4 @@
 #include <LiquidCrystal.h>
-#include <AceButton.h>
-#include "pt.h"
 #include "large_font.h"
 #include "clock.h"
 #include "audio_player.h"
@@ -13,45 +11,21 @@
 #define LCD_D6      3
 #define LCD_D7      2
 
-
-
 #define BUTTON_PIN  A0
 
 using namespace ace_button;
 
 static LiquidCrystal lcd(LCD_RS, LCD_EN, LCD_D4, LCD_D5, LCD_D6, LCD_D7);
-
-
-
 static AceButton button(BUTTON_PIN);
 
 static char buffer[32];
 
 ScreenClock screen_clock;
+Screen *curr_screen = &screen_clock;
 
-void button_event(AceButton* button, uint8_t eventType, uint8_t buttonState) 
+void button_event(AceButton* button, uint8_t type, uint8_t state) 
 {
-  static unsigned long repeat_counter = 0;
-  
-  switch (eventType)
-  {
-  case AceButton::kEventPressed:
-    //speak_requested = true;
-    break;
-
-  case AceButton::kEventReleased:
-    repeat_counter = 0;
-    break;
-
-  case AceButton::kEventRepeatPressed:
-    repeat_counter++;
-    if (repeat_counter == 20)
-      AudioPlayer::play_track(50);
-    break;
-
-  default:
-    break;
-  }
+    curr_screen->button_event(type, state);
 }
 
 void setup() 
@@ -73,7 +47,7 @@ void setup()
 
   lcd.begin(16, 2);
   
-  screen_clock.create();
+  curr_screen->create();
 }
 
 void loop() 
@@ -81,7 +55,7 @@ void loop()
   button.check();
   AudioPlayer::process();
   
-  screen_clock.process(lcd);
+  curr_screen->process(lcd);
 
   if (Serial.available() > 0)
   {
