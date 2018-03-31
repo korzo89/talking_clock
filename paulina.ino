@@ -5,10 +5,39 @@
 #include <Wire.h>
 #include <AceButton.h>
 #include "pt.h"
+#include "large_font.h"
+
+#define LCD_RS      12
+#define LCD_EN      11
+#define LCD_D4      5
+#define LCD_D5      4
+#define LCD_D6      3
+#define LCD_D7      2
+
+#define DFP_RX      9
+#define DFP_TX      8
+
+#define BUTTON_PIN  A0
 
 using namespace ace_button;
 
+class Mp3Notify;
+static SoftwareSerial secondarySerial(DFP_RX, DFP_TX);
+static DFMiniMp3<SoftwareSerial, Mp3Notify> mp3(secondarySerial);
 static bool clip_finished = false;
+
+static LiquidCrystal lcd(LCD_RS, LCD_EN, LCD_D4, LCD_D5, LCD_D6, LCD_D7);
+
+static DS1307 rtc;
+
+static AceButton button(BUTTON_PIN);
+
+static bool speak_requested = false;
+
+static struct pt time_updater_pt;
+static struct pt time_speaker_pt;
+
+static char buffer[32];
 
 class Mp3Notify
 {
@@ -35,249 +64,45 @@ public:
   }
 };
 
-// the 8 arrays that form each segment of the custom numbers
-byte bar1[8] = 
+void init_custom_char(int id, const byte *def)
 {
-        B11100,
-        B11110,
-        B11110,
-        B11110,
-        B11110,
-        B11110,
-        B11110,
-        B11100
-};
-byte bar2[8] =
-{
-        B00111,
-        B01111,
-        B01111,
-        B01111,
-        B01111,
-        B01111,
-        B01111,
-        B00111
-};
-byte bar3[8] =
-{
-        B11111,
-        B11111,
-        B00000,
-        B00000,
-        B00000,
-        B00000,
-        B11111,
-        B11111
-};
-byte bar4[8] =
-{
-        B11110,
-        B11100,
-        B00000,
-        B00000,
-        B00000,
-        B00000,
-        B11000,
-        B11100
-};
-byte bar5[8] =
-{
-        B01111,
-        B00111,
-        B00000,
-        B00000,
-        B00000,
-        B00000,
-        B00011,
-        B00111
-};
-byte bar6[8] =
-{
-        B00000,
-        B00000,
-        B00000,
-        B00000,
-        B00000,
-        B00000,
-        B11111,
-        B11111
-};
-byte bar7[8] =
-{
-        B00000,
-        B00000,
-        B00000,
-        B00000,
-        B00000,
-        B00000,
-        B00111,
-        B01111
-};
-byte bar8[8] =
-{
-        B11111,
-        B11111,
-        B00000,
-        B00000,
-        B00000,
-        B00000,
-        B00000,
-        B00000
-};
+  for (int i = 0; i < 8; i++)
+    buffer[i] = pgm_read_byte_near(def + i);
+    
+  lcd.createChar(id, buffer);
+}
 
-SoftwareSerial secondarySerial(9, 8); // RX, TX
-DFMiniMp3<SoftwareSerial, Mp3Notify> mp3(secondarySerial);
+void init_large_font()
+{
+  init_custom_char(1, bar1);
+  init_custom_char(2, bar2);
+  init_custom_char(3, bar3);
+  init_custom_char(4, bar4);
+  init_custom_char(5, bar5);
+  init_custom_char(6, bar6);
+  init_custom_char(7, bar7);
+  init_custom_char(8, bar8);
+}
 
-const int rs = 12, en = 11, d4 = 5, d5 = 4, d6 = 3, d7 = 2;
-LiquidCrystal lcd(rs, en, d4, d5, d6, d7);
+void print_large_char(const byte *def, int offset)
+{
+  byte id = pgm_read_byte_near(def + offset);
+  lcd.write(id);
+}
 
-DS1307 rtc;
+void print_large_number(int num, int col)
+{
+  const byte *def = large_font[num];
 
-char buffer[100];
-
-void custom0(int col)
-{ // uses segments to build the number 0
   lcd.setCursor(col, 0); 
-  lcd.write(2);  
-  lcd.write(8); 
-  lcd.write(1);
+  print_large_char(def, 0);
+  print_large_char(def, 1);
+  print_large_char(def, 2);
   lcd.setCursor(col, 1); 
-  lcd.write(2);  
-  lcd.write(6);  
-  lcd.write(1);
+  print_large_char(def, 3);
+  print_large_char(def, 4);
+  print_large_char(def, 5);
 }
-
-void custom1(int col)
-{
-  lcd.setCursor(col,0);
-  lcd.write(32);
-  lcd.write(32);
-  lcd.write(1);
-  lcd.setCursor(col,1);
-  lcd.write(32);
-  lcd.write(32);
-  lcd.write(1);
-}
-
-void custom2(int col)
-{
-  lcd.setCursor(col,0);
-  lcd.write(5);
-  lcd.write(3);
-  lcd.write(1);
-  lcd.setCursor(col, 1);
-  lcd.write(2);
-  lcd.write(6);
-  lcd.write(6);
-}
-
-void custom3(int col)
-{
-  lcd.setCursor(col,0);
-  lcd.write(5);
-  lcd.write(3);
-  lcd.write(1);
-  lcd.setCursor(col, 1);
-  lcd.write(7);
-  lcd.write(6);
-  lcd.write(1); 
-}
-
-void custom4(int col)
-{
-  lcd.setCursor(col,0);
-  lcd.write(2);
-  lcd.write(6);
-  lcd.write(1);
-  lcd.setCursor(col, 1);
-  lcd.write(32);
-  lcd.write(32);
-  lcd.write(1);
-}
-
-void custom5(int col)
-{
-  lcd.setCursor(col,0);
-  lcd.write(2);
-  lcd.write(3);
-  lcd.write(4);
-  lcd.setCursor(col, 1);
-  lcd.write(7);
-  lcd.write(6);
-  lcd.write(1);
-}
-
-void custom6(int col)
-{
-  lcd.setCursor(col,0);
-  lcd.write(2);
-  lcd.write(3);
-  lcd.write(4);
-  lcd.setCursor(col, 1);
-  lcd.write(2);
-  lcd.write(6);
-  lcd.write(1);
-}
-
-void custom7(int col)
-{
-  lcd.setCursor(col,0);
-  lcd.write(2);
-  lcd.write(8);
-  lcd.write(1);
-  lcd.setCursor(col, 1);
-  lcd.write(32);
-  lcd.write(32);
-  lcd.write(1);
-}
-
-void custom8(int col)
-{
-  lcd.setCursor(col, 0); 
-  lcd.write(2);  
-  lcd.write(3); 
-  lcd.write(1);
-  lcd.setCursor(col, 1); 
-  lcd.write(2);  
-  lcd.write(6);  
-  lcd.write(1);
-}
-
-void custom9(int col)
-{
-  lcd.setCursor(col, 0); 
-  lcd.write(2);  
-  lcd.write(3); 
-  lcd.write(1);
-  lcd.setCursor(col, 1); 
-  lcd.write(7);  
-  lcd.write(6);  
-  lcd.write(1);
-}
-
-void printNumber(int value, int col) {
-  if (value == 0) {
-    custom0(col);
-  } if (value == 1) {
-    custom1(col);
-  } if (value == 2) {
-    custom2(col);
-  } if (value == 3) {
-    custom3(col);
-  } if (value == 4) {
-    custom4(col);
-  } if (value == 5) {
-    custom5(col);
-  } if (value == 6) {
-    custom6(col);
-  } if (value == 7) {
-    custom7(col);
-  } if (value == 8) {
-    custom8(col);
-  } if (value == 9) {
-    custom9(col);
-  }      
-} 
 
 void update_time(void)
 {
@@ -286,10 +111,10 @@ void update_time(void)
   int hh = now.hour();
   int mm = now.minute();
   int ss = now.second();
-  printNumber(hh / 10, 0);
-  printNumber(hh % 10, 3);
-  printNumber(mm / 10, 7);
-  printNumber(mm % 10, 10);
+  print_large_number(hh / 10, 0);
+  print_large_number(hh % 10, 3);
+  print_large_number(mm / 10, 7);
+  print_large_number(mm % 10, 10);
 
   char dot = (ss % 2 == 0) ? ' ' : '\xA5';
   lcd.setCursor(6, 0);
@@ -301,13 +126,12 @@ void update_time(void)
   if (ss < 10)
     lcd.print('0');
   lcd.print(ss);
+
+  static int prev_mm = -1;
+  if ((prev_mm != -1) && (prev_mm == 59) && (mm == 0))
+    speak_requested = true;
+  prev_mm = mm;
 }
-
-const int BUTTON_PIN = A0;
-AceButton button(BUTTON_PIN);
-
-static struct pt time_updater_pt;
-static struct pt time_speaker_pt;
 
 PT_THREAD(time_updater(struct pt *pt))
 {
@@ -325,8 +149,6 @@ PT_THREAD(time_updater(struct pt *pt))
 
   PT_END(pt);
 }
-
-static bool speak_requested = false;
 
 int get_hour_clip(int hh)
 {
@@ -441,9 +263,9 @@ void setup()
 
   pinMode(BUTTON_PIN, INPUT_PULLUP);
 
-  ButtonConfig* buttonConfig = button.getButtonConfig();
-  buttonConfig->setEventHandler(button_event);
-  buttonConfig->setFeature(ButtonConfig::kFeatureRepeatPress);
+  ButtonConfig* cfg = button.getButtonConfig();
+  cfg->setEventHandler(button_event);
+  cfg->setFeature(ButtonConfig::kFeatureRepeatPress);
 
   Wire.begin();
   rtc.begin();
@@ -451,14 +273,7 @@ void setup()
   if (!rtc.isrunning())
     rtc.adjust(DateTime(__DATE__, __TIME__));
 
-  lcd.createChar(1, bar1);
-  lcd.createChar(2, bar2);
-  lcd.createChar(3, bar3);
-  lcd.createChar(4, bar4);
-  lcd.createChar(5, bar5);
-  lcd.createChar(6, bar6);
-  lcd.createChar(7, bar7);
-  lcd.createChar(8, bar8);
+  init_large_font();
 
   lcd.begin(16, 2);
   
