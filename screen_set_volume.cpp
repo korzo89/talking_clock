@@ -20,8 +20,6 @@ void ScreenSetVolume::create(LiquidCrystal &lcd)
 
 void ScreenSetVolume::destroy(LiquidCrystal &lcd)
 {
-    AudioPlayer::set_volume(volume);
-    Settings::set_volume(volume);
 }
 
 //----------------------------------------------------------
@@ -34,14 +32,11 @@ void ScreenSetVolume::process(LiquidCrystal &lcd)
 
 void ScreenSetVolume::button1_event(LiquidCrystal &lcd, uint8_t type)
 {
-    switch (type)
+    if (type == AceButton::kEventPressed)
     {
-    case AceButton::kEventPressed:
+        AudioPlayer::set_volume(volume);
+        Settings::set_volume(volume);
         ScreenManager::show_screen(Screens::clock());
-        break;
-
-    default:
-        break;
     }
 }
 
@@ -83,6 +78,8 @@ void ScreenSetVolume::button3_event(LiquidCrystal &lcd, uint8_t type)
 
 void ScreenSetVolume::button4_event(LiquidCrystal &lcd, uint8_t type)
 {
+    if (type == AceButton::kEventPressed)
+        ScreenManager::show_screen(Screens::clock());
 }
 
 //----------------------------------------------------------
