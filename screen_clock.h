@@ -1,7 +1,7 @@
 #ifndef SCREEN_CLOCK_H_
 #define SCREEN_CLOCK_H_
 
-#include "screen.h"
+#include "screen_manager.h"
 #include "pt.h"
 
 //----------------------------------------------------------
@@ -9,10 +9,10 @@
 class ScreenClock : public Screen
 {
 public:
-    void create() override;
-    void destroy() override;
+    void create(LiquidCrystal &lcd) override;
+    void destroy(LiquidCrystal &lcd) override;
     void process(LiquidCrystal &lcd) override;
-    void button_event(uint8_t type, uint8_t state) override;
+    void button_event(LiquidCrystal &lcd, uint8_t type, uint8_t state) override;
 
 private:
     struct pt updater_pt;

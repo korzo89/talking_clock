@@ -2,23 +2,26 @@
 #include "audio_player.h"
 #include "clock.h"
 #include "large_font.h"
+#include "screens.h"
 
 using namespace ace_button;
 
 //----------------------------------------------------------
 
-void ScreenClock::create()
+void ScreenClock::create(LiquidCrystal &lcd)
 {
     PT_INIT(&updater_pt);
     PT_INIT(&speaker_pt);
 
     last_update = millis();
     speak_requested = false;
+
+    lcd.clear();
 }
 
 //----------------------------------------------------------
 
-void ScreenClock::destroy()
+void ScreenClock::destroy(LiquidCrystal &lcd)
 {
 }
 
@@ -32,7 +35,7 @@ void ScreenClock::process(LiquidCrystal &lcd)
 
 //----------------------------------------------------------
 
-void ScreenClock::button_event(uint8_t type, uint8_t state)
+void ScreenClock::button_event(LiquidCrystal &lcd, uint8_t type, uint8_t state)
 {
     switch (type)
     {
