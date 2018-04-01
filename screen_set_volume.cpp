@@ -8,16 +8,6 @@ using namespace ace_button;
 
 //----------------------------------------------------------
 
-void ScreenSetVolume::create()
-{
-    volume = Settings::get_volume();
-
-    Display::get().clear();
-    update();
-}
-
-//----------------------------------------------------------
-
 void ScreenSetVolume::destroy()
 {
     AudioPlayer::set_volume(Settings::get_volume());
@@ -25,77 +15,50 @@ void ScreenSetVolume::destroy()
 
 //----------------------------------------------------------
 
-void ScreenSetVolume::process()
+const __FlashStringHelper* ScreenSetVolume::get_name() const
 {
+    return F("Glosnosc");
 }
 
 //----------------------------------------------------------
 
-void ScreenSetVolume::set_volume(byte value)
+byte ScreenSetVolume::get_minimum() const
 {
-    volume = value;
-    update();
+    return 0;
+}
 
-    AudioPlayer::set_volume(volume);
+byte ScreenSetVolume::get_maximum() const
+{
+    return 30;
+}
+
+//----------------------------------------------------------
+
+Screen& ScreenSetVolume::get_next_screen() const
+{
+    return Screens::clock();
+}
+
+//----------------------------------------------------------
+
+byte ScreenSetVolume::get_value() const
+{
+    return Settings::get_volume();
+}
+
+//----------------------------------------------------------
+
+void ScreenSetVolume::set_value(byte val)
+{
+    ScreenSetValue::set_value(val);
+
+    AudioPlayer::set_volume(val);
     AudioPlayer::play_track(49);
 }
 
 //----------------------------------------------------------
 
-void ScreenSetVolume::button1_event(uint8_t type)
+void ScreenSetVolume::save_value(byte val)
 {
-    if (type == AceButton::kEventPressed)
-    {
-        Settings::set_volume(volume);
-        ScreenManager::show_screen(Screens::clock());
-    }
-}
-
-void ScreenSetVolume::button2_event(uint8_t type)
-{
-    switch (type)
-    {
-    case AceButton::kEventPressed:
-    case AceButton::kEventRepeatPressed:
-        if (volume > 0)
-            set_volume(volume - 1);
-        break;
-
-    default:
-        break;
-    }
-}
-
-void ScreenSetVolume::button3_event(uint8_t type)
-{
-    switch (type)
-    {
-    case AceButton::kEventPressed:
-    case AceButton::kEventRepeatPressed:
-        if (volume < 30)
-            set_volume(volume + 1);
-        break;
-
-    default:
-        break;
-    }
-}
-
-void ScreenSetVolume::button4_event(uint8_t type)
-{
-    if (type == AceButton::kEventPressed)
-        ScreenManager::show_screen(Screens::clock());
-}
-
-//----------------------------------------------------------
-
-void ScreenSetVolume::update()
-{
-    auto &lcd = Display::get();
-
-    lcd.setCursor(0, 0);
-    lcd.print(F("Glosnosc"));
-
-    Display::print_large_number(10, volume / 10);
-    Display::print_large_number(13, volume % 10);
+    Settings::set_volume(val);
 }

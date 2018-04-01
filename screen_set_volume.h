@@ -1,26 +1,23 @@
 #ifndef SCREEN_SET_VOLUME_H_
 #define SCREEN_SET_VOLUME_H_
 
-#include "screen_manager.h"
+#include "screen_set_value.h"
 
 //----------------------------------------------------------
 
-class ScreenSetVolume : public Screen
+class ScreenSetVolume : public ScreenSetValue
 {
 public:
-    void create() override;
     void destroy() override;
-    void process() override;
-    void button1_event(uint8_t type) override;
-    void button2_event(uint8_t type) override;
-    void button3_event(uint8_t type) override;
-    void button4_event(uint8_t type) override;
 
 private:
-    byte volume;
-
-    void set_volume(byte value);
-    void update();
+    const __FlashStringHelper* get_name() const override;
+    byte get_minimum() const override;
+    byte get_maximum() const override;
+    Screen& get_next_screen() const override;
+    byte get_value() const override;
+    void save_value(byte val) override;
+    virtual void set_value(byte val) override;
 };
 
 //----------------------------------------------------------
