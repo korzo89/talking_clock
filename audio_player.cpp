@@ -3,6 +3,7 @@
 #include <SoftwareSerial.h>
 #include <DFMiniMp3.h>
 #include <stdint.h>
+#include "hal.h"
 
 //----------------------------------------------------------
 
@@ -27,10 +28,7 @@ public:
     }
 };
 
-#define DFP_RX      9
-#define DFP_TX      8
-
-SoftwareSerial serial(DFP_RX, DFP_TX);
+SoftwareSerial serial(HAL_DFPLAYER_RX_PIN, HAL_DFPLAYER_TX_PIN);
 DFMiniMp3<SoftwareSerial, Mp3Notify> mp3(serial);
 
 //----------------------------------------------------------

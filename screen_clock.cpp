@@ -1,14 +1,14 @@
 #include "screen_clock.h"
 #include "audio_player.h"
 #include "clock.h"
-#include "large_font.h"
+#include "display.h"
 #include "screens.h"
 
 using namespace ace_button;
 
 //----------------------------------------------------------
 
-void ScreenClock::create(LiquidCrystal &lcd)
+void ScreenClock::create()
 {
     PT_INIT(&updater_pt);
     PT_INIT(&speaker_pt);
@@ -16,26 +16,26 @@ void ScreenClock::create(LiquidCrystal &lcd)
     last_update = millis();
     speak_requested = false;
 
-    lcd.clear();
+    Display::get().clear();
 }
 
 //----------------------------------------------------------
 
-void ScreenClock::destroy(LiquidCrystal &lcd)
+void ScreenClock::destroy()
 {
 }
 
 //----------------------------------------------------------
 
-void ScreenClock::process(LiquidCrystal &lcd)
+void ScreenClock::process()
 {
-    updater(lcd);
+    updater();
     speaker();
 }
 
 //----------------------------------------------------------
 
-void ScreenClock::button1_event(LiquidCrystal &lcd, uint8_t type)
+void ScreenClock::button1_event(uint8_t type)
 {
     switch (type)
     {
@@ -58,15 +58,15 @@ void ScreenClock::button1_event(LiquidCrystal &lcd, uint8_t type)
     }
 }
 
-void ScreenClock::button2_event(LiquidCrystal &lcd, uint8_t type)
+void ScreenClock::button2_event(uint8_t type)
 {
 }
 
-void ScreenClock::button3_event(LiquidCrystal &lcd, uint8_t type)
+void ScreenClock::button3_event(uint8_t type)
 {
 }
 
-void ScreenClock::button4_event(LiquidCrystal &lcd, uint8_t type)
+void ScreenClock::button4_event(uint8_t type)
 {
     if (type == AceButton::kEventPressed)
         ScreenManager::show_screen(Screens::set_volume());
@@ -74,16 +74,18 @@ void ScreenClock::button4_event(LiquidCrystal &lcd, uint8_t type)
 
 //----------------------------------------------------------
 
-void ScreenClock::update_time(LiquidCrystal &lcd)
+void ScreenClock::update_time()
 {
+    auto &lcd = Display::get();
+
     DateTime now = Clock::get_time();
     int hh = now.hour();
     int mm = now.minute();
     int ss = now.second();
-    LargeFont::print_number(lcd,  0, hh / 10);
-    LargeFont::print_number(lcd,  3, hh % 10);
-    LargeFont::print_number(lcd,  7, mm / 10);
-    LargeFont::print_number(lcd, 10, mm % 10);
+    Display::print_large_number(0,  hh / 10);
+    Display::print_large_number(3,  hh % 10);
+    Display::print_large_number(7,  mm / 10);
+    Display::print_large_number(10, mm % 10);
 
     char dot = (ss % 2 == 0) ? ' ' : '\xA5';
     lcd.setCursor(6, 0);
@@ -104,13 +106,13 @@ void ScreenClock::update_time(LiquidCrystal &lcd)
 
 //----------------------------------------------------------
 
-PT_THREAD(ScreenClock::updater(LiquidCrystal &lcd))
+PT_THREAD(ScreenClock::updater())
 {
     PT_BEGIN(&updater_pt);
 
     while (1)
     {
-        update_time(lcd);
+        update_time();
 
         last_update = millis();
         PT_YIELD_UNTIL(&updater_pt, millis() - last_update > 500);

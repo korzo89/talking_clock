@@ -9,13 +9,13 @@
 class ScreenClock : public Screen
 {
 public:
-    void create(LiquidCrystal &lcd) override;
-    void destroy(LiquidCrystal &lcd) override;
-    void process(LiquidCrystal &lcd) override;
-    void button1_event(LiquidCrystal &lcd, uint8_t type) override;
-    void button2_event(LiquidCrystal &lcd, uint8_t type) override;
-    void button3_event(LiquidCrystal &lcd, uint8_t type) override;
-    void button4_event(LiquidCrystal &lcd, uint8_t type) override;
+    void create() override;
+    void destroy() override;
+    void process() override;
+    void button1_event(uint8_t type) override;
+    void button2_event(uint8_t type) override;
+    void button3_event(uint8_t type) override;
+    void button4_event(uint8_t type) override;
 
 private:
     struct pt updater_pt;
@@ -31,10 +31,10 @@ private:
     int tens_clip;
     int ones_clip;
 
-    PT_THREAD(updater(LiquidCrystal &lcd));
+    PT_THREAD(updater());
     PT_THREAD(speaker());
 
-    void update_time(LiquidCrystal &lcd);
+    void update_time();
     static int get_hour_clip(int hh);
     static int get_minutes_tens_clip(int mm);
     static int get_minutes_ones_clip(int mm);

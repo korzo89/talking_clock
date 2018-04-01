@@ -1,15 +1,17 @@
-#ifndef LARGE_FONT_H_
-#define LARGE_FONT_H_
+#ifndef DISPLAY_H_
+#define DISPLAY_H_
 
 #include <LiquidCrystal.h>
 
 //----------------------------------------------------------
 
-namespace LargeFont
+namespace Display
 {
 
-void init(LiquidCrystal &lcd);
-void print_number(LiquidCrystal &lcd, int col, int num);
+void init();
+LiquidCrystal& get();
+
+void print_large_number(int col, int num);
 
 }
 

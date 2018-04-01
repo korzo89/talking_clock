@@ -8,19 +8,19 @@
 class ScreenSetVolume : public Screen
 {
 public:
-    void create(LiquidCrystal &lcd) override;
-    void destroy(LiquidCrystal &lcd) override;
-    void process(LiquidCrystal &lcd) override;
-    void button1_event(LiquidCrystal &lcd, uint8_t type) override;
-    void button2_event(LiquidCrystal &lcd, uint8_t type) override;
-    void button3_event(LiquidCrystal &lcd, uint8_t type) override;
-    void button4_event(LiquidCrystal &lcd, uint8_t type) override;
+    void create() override;
+    void destroy() override;
+    void process() override;
+    void button1_event(uint8_t type) override;
+    void button2_event(uint8_t type) override;
+    void button3_event(uint8_t type) override;
+    void button4_event(uint8_t type) override;
 
 private:
     byte volume;
 
-    void set_volume(LiquidCrystal &lcd, byte value);
-    void update(LiquidCrystal &lcd);
+    void set_volume(byte value);
+    void update();
 };
 
 //----------------------------------------------------------

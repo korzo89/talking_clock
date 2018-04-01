@@ -1,6 +1,7 @@
 #include "buttons.h"
-#include <AceButton.h>
+#include "hal.h"
 #include "screen_manager.h"
+#include <AceButton.h>
 
 using namespace ace_button;
 
@@ -9,15 +10,10 @@ using namespace ace_button;
 namespace Buttons
 {
 
-#define BUTTON1_PIN  A0
-#define BUTTON2_PIN  A1
-#define BUTTON3_PIN  A2
-#define BUTTON4_PIN  A3
-
-AceButton button1(BUTTON1_PIN);
-AceButton button2(BUTTON2_PIN);
-AceButton button3(BUTTON3_PIN);
-AceButton button4(BUTTON4_PIN);
+AceButton button1(HAL_BUTTON1_PIN);
+AceButton button2(HAL_BUTTON2_PIN);
+AceButton button3(HAL_BUTTON3_PIN);
+AceButton button4(HAL_BUTTON4_PIN);
 
 //----------------------------------------------------------
 

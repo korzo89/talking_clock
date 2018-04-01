@@ -1,9 +1,10 @@
-#include "large_font.h"
+#include "display.h"
+#include "hal.h"
 #include <Arduino.h>
 
 //----------------------------------------------------------
 
-namespace LargeFont
+namespace Display
 {
 
 //----------------------------------------------------------
@@ -111,6 +112,13 @@ const PROGMEM byte large_font[][6] = {
 
 //----------------------------------------------------------
 
+static LiquidCrystal lcd(
+    HAL_LCD_RS_PIN, HAL_LCD_EN_PIN, 
+    HAL_LCD_D4_PIN, HAL_LCD_D5_PIN, 
+    HAL_LCD_D6_PIN, HAL_LCD_D7_PIN);
+
+//----------------------------------------------------------
+
 void init_custom_char(LiquidCrystal &lcd, int id, const byte *def)
 {
     byte temp[8];
@@ -122,8 +130,10 @@ void init_custom_char(LiquidCrystal &lcd, int id, const byte *def)
 
 //----------------------------------------------------------
 
-void init(LiquidCrystal &lcd)
+void init()
 {
+    lcd.begin(16, 2);
+
     init_custom_char(lcd, 1, bar1);
     init_custom_char(lcd, 2, bar2);
     init_custom_char(lcd, 3, bar3);
@@ -136,7 +146,14 @@ void init(LiquidCrystal &lcd)
 
 //----------------------------------------------------------
 
-void print_large_char(LiquidCrystal &lcd, const byte *def, int offset)
+LiquidCrystal& get()
+{
+    return lcd;
+}
+
+//----------------------------------------------------------
+
+void print_large_char(const byte *def, int offset)
 {
     byte id = pgm_read_byte_near(def + offset);
     lcd.write(id);
@@ -144,18 +161,18 @@ void print_large_char(LiquidCrystal &lcd, const byte *def, int offset)
 
 //----------------------------------------------------------
 
-void print_number(LiquidCrystal &lcd, int col, int num)
+void print_large_number(int col, int num)
 {
     const byte *def = large_font[num];
 
     lcd.setCursor(col, 0);
-    print_large_char(lcd, def, 0);
-    print_large_char(lcd, def, 1);
-    print_large_char(lcd, def, 2);
+    print_large_char(def, 0);
+    print_large_char(def, 1);
+    print_large_char(def, 2);
     lcd.setCursor(col, 1);
-    print_large_char(lcd, def, 3);
-    print_large_char(lcd, def, 4);
-    print_large_char(lcd, def, 5);
+    print_large_char(def, 3);
+    print_large_char(def, 4);
+    print_large_char(def, 5);
 }
 
 //----------------------------------------------------------
