@@ -51,7 +51,7 @@ void process()
 
 void set_volume(int volume)
 {
-    mp3.setVolume(100);
+    mp3.setVolume(volume);
 }
 
 //----------------------------------------------------------

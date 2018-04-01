@@ -12,7 +12,10 @@ public:
     virtual void create(LiquidCrystal &lcd) = 0;
     virtual void destroy(LiquidCrystal &lcd) = 0;
     virtual void process(LiquidCrystal &lcd) = 0;
-    virtual void button_event(LiquidCrystal &lcd, uint8_t type, uint8_t state) = 0;
+    virtual void button1_event(LiquidCrystal &lcd, uint8_t type) = 0;
+    virtual void button2_event(LiquidCrystal &lcd, uint8_t type) = 0;
+    virtual void button3_event(LiquidCrystal &lcd, uint8_t type) = 0;
+    virtual void button4_event(LiquidCrystal &lcd, uint8_t type) = 0;
 };
 
 //----------------------------------------------------------
@@ -20,9 +23,13 @@ public:
 namespace ScreenManager
 {
 
-void show_screen(LiquidCrystal &lcd, Screen &screen);
-void process(LiquidCrystal &lcd);
-void button_event(LiquidCrystal &lcd, uint8_t type, uint8_t state);
+void init(LiquidCrystal *lcd);
+void show_screen(Screen &screen);
+void process();
+void button1_event(uint8_t type);
+void button2_event(uint8_t type);
+void button3_event(uint8_t type);
+void button4_event(uint8_t type);
 
 }
 

@@ -5,33 +5,59 @@
 namespace ScreenManager
 {
 
+LiquidCrystal *display;
 Screen *current_screen = nullptr;
 
 //----------------------------------------------------------
 
-void show_screen(LiquidCrystal &lcd, Screen &screen)
+void init(LiquidCrystal *lcd)
+{
+    display = lcd;
+}
+
+//----------------------------------------------------------
+
+void show_screen(Screen &screen)
 {
     if (current_screen)
-        current_screen->destroy(lcd);
+        current_screen->destroy(*display);
 
-    screen.create(lcd);
+    screen.create(*display);
     current_screen = &screen;
 }
 
 //----------------------------------------------------------
 
-void process(LiquidCrystal &lcd)
+void process()
 {
     if (current_screen)
-        current_screen->process(lcd);
+        current_screen->process(*display);
 }
 
 //----------------------------------------------------------
 
-void button_event(LiquidCrystal &lcd, uint8_t type, uint8_t state)
+void button1_event(uint8_t type)
 {
     if (current_screen)
-        current_screen->button_event(lcd, type, state);
+        current_screen->button1_event(*display, type);
+}
+
+void button2_event(uint8_t type)
+{
+    if (current_screen)
+        current_screen->button2_event(*display, type);
+}
+
+void button3_event(uint8_t type)
+{
+    if (current_screen)
+        current_screen->button3_event(*display, type);
+}
+
+void button4_event(uint8_t type)
+{
+    if (current_screen)
+        current_screen->button4_event(*display, type);
 }
 
 //----------------------------------------------------------

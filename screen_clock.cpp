@@ -35,7 +35,7 @@ void ScreenClock::process(LiquidCrystal &lcd)
 
 //----------------------------------------------------------
 
-void ScreenClock::button_event(LiquidCrystal &lcd, uint8_t type, uint8_t state)
+void ScreenClock::button1_event(LiquidCrystal &lcd, uint8_t type)
 {
     switch (type)
     {
@@ -48,14 +48,27 @@ void ScreenClock::button_event(LiquidCrystal &lcd, uint8_t type, uint8_t state)
         break;
 
     case AceButton::kEventRepeatPressed:
-        repeat_counter++;
-        if (repeat_counter == 20)
-            AudioPlayer::play_track(50);
+        ScreenManager::show_screen(Screens::set_volume());
+        // repeat_counter++;
+        // if (repeat_counter == 20)
+        //     AudioPlayer::play_track(50);
         break;
 
     default:
         break;
     }
+}
+
+void ScreenClock::button2_event(LiquidCrystal &lcd, uint8_t type)
+{
+}
+
+void ScreenClock::button3_event(LiquidCrystal &lcd, uint8_t type)
+{
+}
+
+void ScreenClock::button4_event(LiquidCrystal &lcd, uint8_t type)
+{
 }
 
 //----------------------------------------------------------

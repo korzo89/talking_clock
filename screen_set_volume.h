@@ -11,7 +11,10 @@ public:
     void create(LiquidCrystal &lcd) override;
     void destroy(LiquidCrystal &lcd) override;
     void process(LiquidCrystal &lcd) override;
-    void button_event(LiquidCrystal &lcd, uint8_t type, uint8_t state) override;
+    void button1_event(LiquidCrystal &lcd, uint8_t type) override;
+    void button2_event(LiquidCrystal &lcd, uint8_t type) override;
+    void button3_event(LiquidCrystal &lcd, uint8_t type) override;
+    void button4_event(LiquidCrystal &lcd, uint8_t type) override;
 
 private:
     byte volume;

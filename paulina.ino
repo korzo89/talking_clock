@@ -4,6 +4,7 @@
 #include "audio_player.h"
 #include "screen_manager.h"
 #include "screens.h"
+#include "buttons.h"
 
 //----------------------------------------------------------
 
@@ -14,19 +15,7 @@
 #define LCD_D6      3
 #define LCD_D7      2
 
-#define BUTTON_PIN  A0
-
-using namespace ace_button;
-
 static LiquidCrystal lcd(LCD_RS, LCD_EN, LCD_D4, LCD_D5, LCD_D6, LCD_D7);
-static AceButton button(BUTTON_PIN);
-
-//----------------------------------------------------------
-
-void button_event(AceButton* button, uint8_t type, uint8_t state) 
-{
-    ScreenManager::button_event(lcd, type, state);
-}
 
 //----------------------------------------------------------
 
@@ -34,12 +23,7 @@ void setup()
 {
     Serial.begin(115200);
 
-    pinMode(BUTTON_PIN, INPUT_PULLUP);
-
-    ButtonConfig *cfg = button.getButtonConfig();
-    cfg->setEventHandler(button_event);
-    cfg->setFeature(ButtonConfig::kFeatureRepeatPress);
-
+    Buttons::init();
     Settings::init();
     Clock::init();
     LargeFont::init(lcd);
@@ -49,14 +33,15 @@ void setup()
 
     lcd.begin(16, 2);
 
-    ScreenManager::show_screen(lcd, Screens::clock());
+    ScreenManager::init(&lcd);
+    ScreenManager::show_screen(Screens::clock());
 }
 
 //----------------------------------------------------------
 
 void loop()
 {
-    button.check();
+    Buttons::process();
     AudioPlayer::process();
-    ScreenManager::process(lcd);
+    ScreenManager::process();
 }

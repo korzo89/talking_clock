@@ -113,49 +113,49 @@ const PROGMEM byte large_font[][6] = {
 
 void init_custom_char(LiquidCrystal &lcd, int id, const byte *def)
 {
-  byte temp[8];
-  for (int i = 0; i < sizeof(temp); i++)
-    temp[i] = pgm_read_byte_near(def + i);
-    
-  lcd.createChar(id, temp);
+    byte temp[8];
+    for (int i = 0; i < sizeof(temp); i++)
+        temp[i] = pgm_read_byte_near(def + i);
+
+    lcd.createChar(id, temp);
 }
 
 //----------------------------------------------------------
 
 void init(LiquidCrystal &lcd)
 {
-  init_custom_char(lcd, 1, bar1);
-  init_custom_char(lcd, 2, bar2);
-  init_custom_char(lcd, 3, bar3);
-  init_custom_char(lcd, 4, bar4);
-  init_custom_char(lcd, 5, bar5);
-  init_custom_char(lcd, 6, bar6);
-  init_custom_char(lcd, 7, bar7);
-  init_custom_char(lcd, 8, bar8);
+    init_custom_char(lcd, 1, bar1);
+    init_custom_char(lcd, 2, bar2);
+    init_custom_char(lcd, 3, bar3);
+    init_custom_char(lcd, 4, bar4);
+    init_custom_char(lcd, 5, bar5);
+    init_custom_char(lcd, 6, bar6);
+    init_custom_char(lcd, 7, bar7);
+    init_custom_char(lcd, 8, bar8);
 }
 
 //----------------------------------------------------------
 
 void print_large_char(LiquidCrystal &lcd, const byte *def, int offset)
 {
-  byte id = pgm_read_byte_near(def + offset);
-  lcd.write(id);
+    byte id = pgm_read_byte_near(def + offset);
+    lcd.write(id);
 }
 
 //----------------------------------------------------------
 
 void print_number(LiquidCrystal &lcd, int col, int num)
 {
-  const byte *def = large_font[num];
+    const byte *def = large_font[num];
 
-  lcd.setCursor(col, 0); 
-  print_large_char(lcd, def, 0);
-  print_large_char(lcd, def, 1);
-  print_large_char(lcd, def, 2);
-  lcd.setCursor(col, 1); 
-  print_large_char(lcd, def, 3);
-  print_large_char(lcd, def, 4);
-  print_large_char(lcd, def, 5);
+    lcd.setCursor(col, 0);
+    print_large_char(lcd, def, 0);
+    print_large_char(lcd, def, 1);
+    print_large_char(lcd, def, 2);
+    lcd.setCursor(col, 1);
+    print_large_char(lcd, def, 3);
+    print_large_char(lcd, def, 4);
+    print_large_char(lcd, def, 5);
 }
 
 //----------------------------------------------------------
