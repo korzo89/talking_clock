@@ -19,6 +19,7 @@ public:
 private:
     byte volume;
 
+    void set_volume(LiquidCrystal &lcd, byte value);
     void update(LiquidCrystal &lcd);
 };
 
