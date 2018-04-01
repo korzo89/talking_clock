@@ -10,8 +10,6 @@
 
 void setup()
 {
-    Serial.begin(115200);
-
     Buttons::init();
     Settings::init();
     Clock::init();

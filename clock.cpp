@@ -20,7 +20,11 @@ void init()
     rtc.begin();
 
     if (!rtc.isrunning())
-        rtc.adjust(DateTime(__DATE__, "12:00:00"));
+    {
+        DateTime now;
+        now.sethour(12);
+        rtc.adjust(now);
+    }
 }
 
 //----------------------------------------------------------

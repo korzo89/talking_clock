@@ -13,6 +13,8 @@ Screen& set_volume();
 Screen& set_hour();
 Screen& set_minute();
 Screen& set_led_red();
+Screen& set_led_green();
+Screen& set_led_blue();
 
 }
 

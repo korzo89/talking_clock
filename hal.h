@@ -3,14 +3,16 @@
 
 //----------------------------------------------------------
 
-#define HAL_LCD_RS_PIN          12
-#define HAL_LCD_EN_PIN          11
+#define HAL_LCD_RS_PIN          7
+#define HAL_LCD_EN_PIN          6
 #define HAL_LCD_D4_PIN          5
 #define HAL_LCD_D5_PIN          4
 #define HAL_LCD_D6_PIN          3
 #define HAL_LCD_D7_PIN          2
 
 #define HAL_LED_RED_PIN         10
+#define HAL_LED_GREEN_PIN       11
+#define HAL_LED_BLUE_PIN        12
 
 #define HAL_DFPLAYER_RX_PIN     9
 #define HAL_DFPLAYER_TX_PIN     8

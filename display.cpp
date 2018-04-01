@@ -144,8 +144,8 @@ void init()
     init_custom_char(lcd, 8, bar8);
 
     pinMode(HAL_LED_RED_PIN, OUTPUT);
-    // pinMode(HAL_LED_GREEN_PIN, OUTPUT);
-    // pinMode(HAL_LED_BLUE_PIN, OUTPUT);
+    pinMode(HAL_LED_GREEN_PIN, OUTPUT);
+    pinMode(HAL_LED_BLUE_PIN, OUTPUT);
 }
 
 //----------------------------------------------------------
@@ -188,12 +188,12 @@ void set_led_red(byte val)
 
 void set_led_green(byte val)
 {
-    // analogWrite(HAL_LED_GREEN_PIN, val);
+    analogWrite(HAL_LED_GREEN_PIN, val);
 }
 
 void set_led_blue(byte val)
 {
-    // analogWrite(HAL_LED_BLUE_PIN, val);
+    analogWrite(HAL_LED_BLUE_PIN, val);
 }
 
 //----------------------------------------------------------

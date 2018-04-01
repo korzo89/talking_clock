@@ -38,7 +38,7 @@ byte ScreenSetLedRed::get_digits() const
 
 Screen& ScreenSetLedRed::get_next_screen() const
 {
-    return Screens::clock();
+    return Screens::set_led_green();
 }
 
 //----------------------------------------------------------
