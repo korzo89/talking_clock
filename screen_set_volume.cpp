@@ -1,10 +1,7 @@
 #include "screen_set_volume.h"
 #include "settings.h"
 #include "screens.h"
-#include "display.h"
 #include "audio_player.h"
-
-using namespace ace_button;
 
 //----------------------------------------------------------
 
@@ -36,7 +33,7 @@ byte ScreenSetVolume::get_maximum() const
 
 Screen& ScreenSetVolume::get_next_screen() const
 {
-    return Screens::clock();
+    return Screens::set_hour();
 }
 
 //----------------------------------------------------------

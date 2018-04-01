@@ -10,7 +10,7 @@ class ScreenSetVolume : public ScreenSetValue
 public:
     void destroy() override;
 
-private:
+protected:
     const __FlashStringHelper* get_name() const override;
     byte get_minimum() const override;
     byte get_maximum() const override;

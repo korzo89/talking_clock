@@ -10,6 +10,8 @@ namespace Screens
 
 Screen& clock();
 Screen& set_volume();
+Screen& set_hour();
+Screen& set_minute();
 
 }
 
