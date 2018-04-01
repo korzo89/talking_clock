@@ -88,9 +88,17 @@ void ScreenSetValue::update()
 {
     auto &lcd = Display::get();
 
+    byte temp = value;
+
+    if (get_digits() == 3)
+    {
+        Display::print_large_number(7, temp / 100);
+        temp %= 100;
+    }
+
+    Display::print_large_number(10, temp / 10);
+    Display::print_large_number(13, temp % 10);
+
     lcd.setCursor(0, 0);
     lcd.print(get_name());
-
-    Display::print_large_number(10, value / 10);
-    Display::print_large_number(13, value % 10);
 }

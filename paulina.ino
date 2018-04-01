@@ -20,6 +20,9 @@ void setup()
     AudioPlayer::set_volume(Settings::get_volume());
 
     Display::init();
+    Display::set_led_red(Settings::get_led_red());
+    Display::set_led_green(Settings::get_led_green());
+    Display::set_led_blue(Settings::get_led_blue());
 
     ScreenManager::show_screen(Screens::clock());
 }

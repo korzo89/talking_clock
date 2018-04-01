@@ -11,6 +11,7 @@ protected:
     const __FlashStringHelper* get_name() const override;
     byte get_minimum() const override;
     byte get_maximum() const override;
+    byte get_digits() const override;
     Screen& get_next_screen() const override;
     byte get_value() const override;
     void save_value(byte val) override;

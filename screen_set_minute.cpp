@@ -21,11 +21,16 @@ byte ScreenSetMinute::get_maximum() const
     return 59;
 }
 
+byte ScreenSetMinute::get_digits() const
+{
+    return 2;
+}
+
 //----------------------------------------------------------
 
 Screen& ScreenSetMinute::get_next_screen() const
 {
-    return Screens::clock();
+    return Screens::set_led_red();
 }
 
 //----------------------------------------------------------

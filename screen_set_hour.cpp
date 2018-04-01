@@ -21,6 +21,11 @@ byte ScreenSetHour::get_maximum() const
     return 23;
 }
 
+byte ScreenSetHour::get_digits() const
+{
+    return 2;
+}
+
 //----------------------------------------------------------
 
 Screen& ScreenSetHour::get_next_screen() const

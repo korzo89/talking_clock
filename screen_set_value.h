@@ -22,6 +22,7 @@ protected:
     virtual const __FlashStringHelper* get_name() const = 0;
     virtual byte get_minimum() const = 0;
     virtual byte get_maximum() const = 0;
+    virtual byte get_digits() const = 0;
     virtual Screen& get_next_screen() const = 0;
     virtual byte get_value() const = 0;
     virtual void save_value(byte val) = 0;

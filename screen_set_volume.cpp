@@ -29,6 +29,11 @@ byte ScreenSetVolume::get_maximum() const
     return 30;
 }
 
+byte ScreenSetVolume::get_digits() const
+{
+    return 2;
+}
+
 //----------------------------------------------------------
 
 Screen& ScreenSetVolume::get_next_screen() const

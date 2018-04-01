@@ -10,6 +10,8 @@
 #define HAL_LCD_D6_PIN          3
 #define HAL_LCD_D7_PIN          2
 
+#define HAL_LED_RED_PIN         10
+
 #define HAL_DFPLAYER_RX_PIN     9
 #define HAL_DFPLAYER_TX_PIN     8
 
