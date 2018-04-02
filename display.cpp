@@ -112,7 +112,7 @@ const PROGMEM byte large_font[][6] = {
 
 //----------------------------------------------------------
 
-static LiquidCrystal lcd(
+LiquidCrystal lcd(
     HAL_LCD_RS_PIN, HAL_LCD_EN_PIN, 
     HAL_LCD_D4_PIN, HAL_LCD_D5_PIN, 
     HAL_LCD_D6_PIN, HAL_LCD_D7_PIN);
