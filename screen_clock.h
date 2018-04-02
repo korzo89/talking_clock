@@ -27,17 +27,18 @@ private:
     unsigned long wait_start;
     unsigned long repeat_counter;
 
-    int hour_clip;
-    int tens_clip;
-    int ones_clip;
+    int8_t prev_mm;
+    int8_t hour_clip;
+    int8_t tens_clip;
+    int8_t ones_clip;
 
     PT_THREAD(updater());
     PT_THREAD(speaker());
 
     void update_time();
-    static int get_hour_clip(int hh);
-    static int get_minutes_tens_clip(int mm);
-    static int get_minutes_ones_clip(int mm);
+    static int8_t get_hour_clip(uint8_t hh);
+    static int8_t get_minutes_tens_clip(uint8_t mm);
+    static int8_t get_minutes_ones_clip(uint8_t mm);
 };
 
 //----------------------------------------------------------

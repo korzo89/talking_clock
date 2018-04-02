@@ -15,6 +15,7 @@ void ScreenClock::create()
 
     last_update = millis();
     speak_requested = false;
+    prev_mm = -1;
 
     Display::get().clear();
 }
@@ -79,9 +80,9 @@ void ScreenClock::update_time()
     auto &lcd = Display::get();
 
     DateTime now = Clock::get_time();
-    int hh = now.hour();
-    int mm = now.minute();
-    int ss = now.second();
+    uint8_t hh = now.hour();
+    uint8_t mm = now.minute();
+    uint8_t ss = now.second();
     Display::print_large_number(0,  hh / 10);
     Display::print_large_number(3,  hh % 10);
     Display::print_large_number(7,  mm / 10);
@@ -98,7 +99,6 @@ void ScreenClock::update_time()
         lcd.print('0');
     lcd.print(ss);
 
-    static int prev_mm = -1;
     if ((prev_mm != -1) && (prev_mm == 59) && (mm == 0))
         speak_requested = true;
     prev_mm = mm;
@@ -123,7 +123,7 @@ PT_THREAD(ScreenClock::updater())
 
 //----------------------------------------------------------
 
-int ScreenClock::get_hour_clip(int hh)
+int8_t ScreenClock::get_hour_clip(uint8_t hh)
 {
     if (hh == 0)
         return 12;
@@ -131,7 +131,7 @@ int ScreenClock::get_hour_clip(int hh)
         return hh;
 }
 
-int ScreenClock::get_minutes_tens_clip(int mm)
+int8_t ScreenClock::get_minutes_tens_clip(uint8_t mm)
 {
     if ((mm >= 10) && (mm < 20))
         return 35 + (mm - 10);
@@ -143,7 +143,7 @@ int ScreenClock::get_minutes_tens_clip(int mm)
         return 45 + (mm - 2);
 }
 
-int ScreenClock::get_minutes_ones_clip(int mm)
+int8_t ScreenClock::get_minutes_ones_clip(uint8_t mm)
 {
     if (mm == 0)
         return 25;
@@ -172,36 +172,34 @@ PT_THREAD(ScreenClock::speaker())
 {
     DateTime now;
 
-    struct pt *pt = &speaker_pt;
-
-    PT_BEGIN(pt);
+    PT_BEGIN(&speaker_pt);
 
     while (1)
     {
-        PT_YIELD_UNTIL(pt, speak_requested);
+        PT_YIELD_UNTIL(&speaker_pt, speak_requested);
 
         now = Clock::get_time();
         hour_clip = get_hour_clip(now.hour());
         tens_clip = get_minutes_tens_clip(now.minute());
         ones_clip = get_minutes_ones_clip(now.minute());
 
-        PLAY_CLIP(pt, 49);
-        PT_DELAY(pt, 100);
+        PLAY_CLIP(&speaker_pt, 49);
+        PT_DELAY(&speaker_pt, 100);
 
-        PLAY_CLIP(pt, hour_clip);
-        PT_DELAY(pt, 100);
+        PLAY_CLIP(&speaker_pt, hour_clip);
+        PT_DELAY(&speaker_pt, 100);
 
-        PLAY_CLIP(pt, tens_clip);
-        PT_DELAY(pt, 100);
+        PLAY_CLIP(&speaker_pt, tens_clip);
+        PT_DELAY(&speaker_pt, 100);
 
         if (ones_clip != -1)
         {
-            PLAY_CLIP(pt, ones_clip);
-            PT_DELAY(pt, 100);
+            PLAY_CLIP(&speaker_pt, ones_clip);
+            PT_DELAY(&speaker_pt, 100);
         }
 
         speak_requested = false;
     }
 
-    PT_END(pt);
+    PT_END(&speaker_pt);
 }
