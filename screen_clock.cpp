@@ -61,6 +61,8 @@ void ScreenClock::button1_event(uint8_t type)
 
 void ScreenClock::button2_event(uint8_t type)
 {
+    if (type == AceButton::kEventPressed)
+        ScreenManager::show_screen(Screens::set_volume());
 }
 
 void ScreenClock::button3_event(uint8_t type)
@@ -69,8 +71,6 @@ void ScreenClock::button3_event(uint8_t type)
 
 void ScreenClock::button4_event(uint8_t type)
 {
-    if (type == AceButton::kEventPressed)
-        ScreenManager::show_screen(Screens::set_volume());
 }
 
 //----------------------------------------------------------

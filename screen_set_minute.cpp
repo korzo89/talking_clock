@@ -30,7 +30,7 @@ byte ScreenSetMinute::get_digits() const
 
 Screen& ScreenSetMinute::get_next_screen() const
 {
-    return Screens::set_led_red();
+    return Screens::clock();
 }
 
 //----------------------------------------------------------

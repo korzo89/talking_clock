@@ -48,6 +48,12 @@ void ScreenSetValue::button1_event(uint8_t type)
 
 void ScreenSetValue::button2_event(uint8_t type)
 {
+    if (type == AceButton::kEventPressed)
+        ScreenManager::show_screen(get_next_screen());
+}
+
+void ScreenSetValue::button3_event(uint8_t type)
+{
     switch (type)
     {
     case AceButton::kEventPressed:
@@ -61,7 +67,7 @@ void ScreenSetValue::button2_event(uint8_t type)
     }
 }
 
-void ScreenSetValue::button3_event(uint8_t type)
+void ScreenSetValue::button4_event(uint8_t type)
 {
     switch (type)
     {
@@ -74,12 +80,6 @@ void ScreenSetValue::button3_event(uint8_t type)
     default:
         break;
     }
-}
-
-void ScreenSetValue::button4_event(uint8_t type)
-{
-    if (type == AceButton::kEventPressed)
-        ScreenManager::show_screen(get_next_screen());
 }
 
 //----------------------------------------------------------
